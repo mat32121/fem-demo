@@ -1,0 +1,252 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{amsmath}
+\usepackage[polish]{babel}
+\usepackage[a4paper]{geometry}
+\usepackage{listings}
+
+\begin{document}
+    \title{Aproksymacja rozwiązania równania potencjału elektromagnetycznego metodą elementów skończonych}
+    \author{Mateusz Kosman}
+    % \date{}
+    \maketitle
+
+    \allowdisplaybreaks
+
+    \section{Równanie potencjału elektromagnetycznego}
+    Dane jest równanie:
+    \begin{equation}
+        \frac{d^2\phi}{dx^2} = -\frac{\rho}{\epsilon_r} \label{main_equation}
+    \end{equation}
+    o następujących warunkach brzegowych:
+    \begin{gather}
+        \phi'(0)+\phi(0) = 5 \label{robin}\\
+        \phi(3) = 2 \label{dirichlet}
+    \end{gather}
+    oraz następujących wartościach zmiennych:
+    \begin{gather}
+        \rho = 1 \label{rho_val}\\
+        \epsilon_r =
+        \begin{cases}
+            10,& x \in [0,1] \\
+            5,& x \in (1,2] \\
+            1,& x \in (2,3]
+        \end{cases} \label{epsilon_val}
+    \end{gather}
+    Chcemy znaleźć aproksymację rozwiązania równania (\ref{main_equation}) korzystając z podanych danych.
+
+    \section{Wyprowadzenie sformułowania wariacyjnego}
+    Równanie (\ref{main_equation}) mnożymy obustronnie przez funkcję testową \(v(x)\) spełniającą warunek \(v(3) = 0\).
+    Otrzymane równanie obustronnie całkujemy po dziedzinie \(\Omega = [0,3]\) i przekształcamy równoważnie:
+    \begin{align}
+        \frac{d^2\phi}{dx^2}(x) \cdot v(x) &= -\frac{\rho}{\epsilon_r} \cdot v(x) \nonumber \\
+        \phi'' v &= -\frac{\rho}{\epsilon_r} v \nonumber \\
+        \int_{0}^{3} \phi'' v\,dx &= \int_{0}^{3} -\frac{\rho}{\epsilon_r} v\,dx \nonumber \\
+        \int_{0}^{3} \phi'' v\,dx &= -\frac{\rho}{\epsilon_r} \int_{0}^{3} v\,dx \nonumber \\
+        \left[\phi' v\right]_{0}^{3} - \int_{0}^{3} \phi' v'\,dx &= -\frac{\rho}{\epsilon_r} \int_{0}^{3} v\,dx \text{ (całk. przez części)} \nonumber \\
+        -\phi'(0) v(0) - \int_{0}^{3} \phi' v'\,dx &= -\frac{\rho}{\epsilon_r} \int_{0}^{3} v\,dx\ \left(v(3) = 0\right) \nonumber \\
+        (\phi(0)-5) v(0) - \int_{0}^{3} \phi' v'\,dx &= -\frac{\rho}{\epsilon_r} \int_{0}^{3} v\,dx \text{ (korzystamy z (\ref{robin}))} \nonumber \\
+        \phi(0) v(0) - \int_{0}^{3} \phi' v'\,dx &= 5v(0) -\frac{\rho}{\epsilon_r} \int_{0}^{3} v\,dx \label{weak_form}
+    \end{align}
+    Wprowadźmy oznaczenia:
+    \begin{align}
+        B(\phi, v) &= \phi(0) v(0) - \int_{0}^{3} \phi' v'\,dx \label{b_def} \\
+        L(v) &= 5v(0) -\frac{\rho}{\epsilon_r} \int_{0}^{3} v\,dx \label{l_def}
+    \end{align}
+    Równanie (\ref{weak_form}) możemy zapisać jako:
+    \begin{equation}
+        B(\phi, v) = L(v), \label{b_eq_l}
+    \end{equation}
+    gdzie \(B(\phi, v)\) jest funkcjonałem biliniowym, a \(L(v)\) funkcjonałem liniowym.
+
+    \section{Zastosowanie metody Galerkina}
+    Dzielimy dziedzinę na n obszarów.
+    W związku z tym przyjmuję ciąg funkcji bazowych \((e_0, e_1, ..., e_n)\) zdefiniowanych następująco:
+    \begin{equation}
+        e_i(x) =
+        \begin{cases}
+            \frac{x-x_{i-1}}{x_i-x_{i-1}},& x \in (x_{i-1}, x_i) \\
+            \frac{x-x_{i+1}}{x_i-x_{i+1}},& x \in (x_i, x_{i+1}) \\
+            0,& \text{w przeciwnym wypadku}
+        \end{cases} \label{e_def}
+    \end{equation}
+    Aproksymujemy rozwiązanie liniowe kombinacją funkcji bazowych \(e_i = e_i(x)\) z przesunięciem \(w_n = 2e_n\), co wynika z (\ref{dirichlet}):
+    \begin{gather}
+        \phi \approx 2e_n + \sum_{i=0}^{n-1} w_i e_i \label{phi_approx}\\
+        v \approx \sum_{i=0}^{n-1} v_i e_i \label{v_approx}
+    \end{gather}
+    Podstawiając aproksymację (\ref{phi_approx}) do równania (\ref{b_eq_l}) otrzymujemy:
+    \begin{align*}
+        B\left(2e_n + \sum_{i=0}^{n-1} w_i e_i, v\right) &= L(v) \\
+        B(2e_n, v) + B\left(\sum_{i=0}^{n-1} w_i e_i, v\right) &= L(v) \\
+        B\left(\sum_{i=0}^{n-1} w_i e_i, v\right) &= L(v)-B(2e_n, v) \\
+        B\left(\sum_{i=0}^{n-1} w_i e_i, v\right) &= L(v)-B(2e_n, v) \\
+        \sum_{i=0}^{n-1} w_i B(e_i, v) &= L(v)-B(2e_n, v)
+    \end{align*}
+    Do otrzymanego równania podstawiamy aproksymację (\ref{v_approx}):
+    \begin{equation*}
+        \sum_{i=0}^{n-1} w_i B\left(e_i, \sum_{j=0}^{n-1} v_j e_j\right) = L\left(\sum_{j=0}^{n-1} v_j e_j\right)-B\left(2e_n, \sum_{j=0}^{n-1} v_j e_j\right)
+    \end{equation*}
+    Skoro \(v\) jest dowolną funkcją, to możemy przyjąć, że:
+    \begin{equation*}
+        \forall j \in \{0,1,...,n-1\}: v_j = 
+        \begin{cases}
+            1,& x = x_j \\
+            0,& x \neq x_j
+        \end{cases}
+    \end{equation*}
+    Stąd otrzymujemy układ \(n\) równań:
+    \begin{equation*}
+        \begin{cases}
+            \sum_{i=0}^{n-1} w_i B\left(e_i, e_0\right) = L\left(e_0\right)-B\left(2e_n, e_0\right) \\
+            \sum_{i=0}^{n-1} w_i B\left(e_i, e_1\right) = L\left(e_1\right)-B\left(2e_n, e_1\right) \\
+            \ldots \\
+            \sum_{i=0}^{n-1} w_i B\left(e_i, e_{n-1}\right) = L\left(e_{n-1}\right)-B\left(2e_n, e_{n-1}\right)
+        \end{cases}
+    \end{equation*}
+    Układ ten można przedstawić w postaci macierzowej:
+    {\footnotesize
+    \begin{equation*}
+        \begin{bmatrix}
+            B\left(e_0, e_0\right) & B\left(e_1, e_0\right) & \cdots & B\left(e_{n-1}, e_0\right) \\
+            B\left(e_0, e_1\right) & B\left(e_1, e_1\right) & \cdots & B\left(e_{n-1}, e_1\right) \\
+            \vdots & \vdots & \ddots & \vdots \\
+            B\left(e_0, e_{n-1}\right) & B\left(e_1, e_{n-1}\right) & \cdots & B\left(e_{n-1}, e_{n-1}\right)
+        \end{bmatrix}
+        \begin{bmatrix}
+            w_0 \\
+            w_1 \\
+            \vdots \\
+            w_{n-1}
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            L\left(e_0\right)-B\left(2e_n, e_0\right) \\
+            L\left(e_1\right)-B\left(2e_n, e_1\right) \\
+            \vdots \\
+            L\left(e_{n-1}\right)-B\left(2e_n, e_{n-1}\right)
+        \end{bmatrix}
+    \end{equation*}
+    }\\
+    Mnożąc równanie obustronnie od lewej przez odwrotność macierzy z wartościami funkcjonału \(B\) otrzymujemy:
+    {\scriptsize
+    \begin{equation}
+        \begin{bmatrix}
+            w_0 \\
+            w_1 \\
+            \vdots \\
+            w_{n-1}
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            B\left(e_0, e_0\right) & B\left(e_1, e_0\right) & \cdots & B\left(e_{n-1}, e_0\right) \\
+            B\left(e_0, e_1\right) & B\left(e_1, e_1\right) & \cdots & B\left(e_{n-1}, e_1\right) \\
+            \vdots & \vdots & \ddots & \vdots \\
+            B\left(e_0, e_{n-1}\right) & B\left(e_1, e_{n-1}\right) & \cdots & B\left(e_{n-1}, e_{n-1}\right)
+        \end{bmatrix}
+        ^{-1}
+        \begin{bmatrix}
+            L\left(e_0\right)-B\left(2e_n, e_0\right) \\
+            L\left(e_1\right)-B\left(2e_n, e_1\right) \\
+            \vdots \\
+            L\left(e_{n-1}\right)-B\left(2e_n, e_{n-1}\right)
+        \end{bmatrix} \label{matrix_solution}
+    \end{equation}
+    }
+
+    \section{Obliczanie aproksymacji komputerowo}
+    Obliczając całki iloczynów funkcji bazowych korzystamy z faktu, że \(e_i e_j \equiv 0\) dla \(|i-j| \geq 2\), ponieważ dla każdego \(x\) co najmniej jeden z czynników jest równy 0, co wynika z definicji (\ref{e_def}).\\
+    Wyznaczamy wartości \(B(e_i, e_j)\) korzystając z równania (\ref{b_def}):
+    \begin{align}
+        B(e_i, e_j) &=
+        \begin{cases}
+            e_0(0)^2 - \int_{0}^{3} e_0'^2\,dx,& i = j = 0 \\
+            e_i(0)^2 - \int_{0}^{3} e_i'^2\,dx,& i = j \neq 0 \\
+            e_i(0)e_j(0) - \int_{0}^{3} e_i' e_j'\,dx,& |i-j| = 1 \\
+            e_i(0)e_j(0),& |i-j| \geq 2
+        \end{cases} \nonumber \\
+        &=
+        \begin{cases}
+            e_0(0)^2 - 1,& i = j = 0 \\
+            e_i(0)^2 - 2,& i = j \neq 0 \\
+            e_i(0)e_j(0) + 1,& |i-j| = 1 \\
+            e_i(0)e_j(0),& |i-j| \geq 2
+        \end{cases} \nonumber \\
+        &=
+        \begin{cases}
+            0,& i = j = 0 \\
+            -2,& i = j \neq 0 \\
+            1,& |i-j| = 1 \\
+            0,& |i-j| \geq 2
+        \end{cases} \label{bij_val}
+    \end{align}
+    Z kolei wartości \(B(2e_n, e_j)\) wynoszą:
+    \begin{align}
+        B(2e_n, e_j) &=
+        \begin{cases}
+            2e_n(0)e_{n-1}(0) - \int_{0}^{3} (2e_n)' e_{n-1}'\,dx,& j = n-1 \\
+            2e_n(0)e_j(0) - \int_{0}^{3} (2e_n)' e_j'\,dx,& j \neq n-1
+        \end{cases} \nonumber \\
+        &=
+        \begin{cases}
+            2e_n(0)e_{n-1}(0) + 2,& j = n-1 \\
+            2e_n(0)e_j(0),& j \neq n-1
+        \end{cases} \nonumber \\
+        &=
+        \begin{cases}
+            2,& j = n-1 \\
+            0,& j \neq n-1
+        \end{cases} \label{bnj_val}
+    \end{align}
+    Wyznaczamy wartości \(L(e_j)\) korzystając z równania (\ref{l_def}):
+    \begin{align}
+        L(e_j) &= 5e_j(0) - \frac{\rho}{\epsilon_r} \int_{0}^{3} e_j\,dx \nonumber \\
+        &=
+        \begin{cases}
+            5 - \frac{\rho}{2\epsilon_r},& j = 0 \\
+            -\frac{\rho}{\epsilon_r},& j \neq 0
+        \end{cases} \label{lj_val}
+    \end{align}
+    Podstawiając wartości (\ref{bij_val}), (\ref{bnj_val}), (\ref{lj_val}) do równania (\ref{matrix_solution}) otrzymujemy:
+    \begin{equation}
+        \begin{bmatrix}
+            w_0 \\
+            w_1 \\
+            \vdots \\
+            w_{n-1}
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            0 &  1 &  0 &  0 &  0 & \cdots &  0 \\
+            1 & -2 &  1 &  0 &  0 & \cdots &  0 \\
+            0 &  1 & -2 &  1 &  0 & \cdots &  0 \\
+            0 &  0 &  1 & -2 &  1 & \cdots &  0 \\
+            0 &  0 &  0 &  1 & -2 & \cdots &  0 \\
+            \vdots & \vdots & \vdots & \vdots & \vdots & \ddots & \vdots \\
+            0 &  0 &  0 &  0 &  0 & \cdots & -2
+        \end{bmatrix}
+        ^{-1}
+        \begin{bmatrix}
+            5 - \frac{\rho}{2\epsilon_r} \\
+            -\frac{\rho}{\epsilon_r} \\
+            -\frac{\rho}{\epsilon_r} \\
+            -\frac{\rho}{\epsilon_r} \\
+            \vdots \\
+            -\frac{\rho}{\epsilon_r} \\
+            -\frac{\rho}{\epsilon_r}-2
+        \end{bmatrix} \label{matrix_nums}
+    \end{equation}
+    Przy aproksymacji (\ref{phi_approx}) założyliśmy, że \(w_n = 2e_n\). Stąd możemy już obliczyć wszystkie wartości ciągu \((w_0, w_1, \ldots, w_n)\) i zaproksymować \(\phi\) zgodnie z (\ref{phi_approx}):
+    \begin{equation}
+        \phi \approx 2e_n + \sum_{i=0}^{n-1} w_i e_i = \sum_{i=0}^{n} w_i e_i
+    \end{equation}
+
+    \section{Szczegóły techniczne}
+    W ramach aproksymacji zadanego równania całki funkcji bazowych liczone są numerycznie, wartości obliczone w poprzedniej sekcji nie są wykorzystywane.
+    Program jest napisany w języku \textit{Python 3.12.3} i wykorzystuje biblioteki:
+    \begin{itemize}
+        \item \textit{matplotlib 3.6.3} - do wizualizacji danych,
+        \item \textit{numpy 1.26.4} - do rachunku macierzowego.
+    \end{itemize}
+    Wartość \(n\) przekazywana jest przez użytkownika jako parametr uruchomieniowy aplikacji, tj. wykonywany jest kod \lstinline{N = int(sys.argv[1])}.
+\end{document}
