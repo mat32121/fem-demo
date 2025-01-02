@@ -17,7 +17,7 @@ def integral(fun: Callable[[float], float], a: float, b: float) -> float:
 
     return area
 
-# Base function e described in the notes
+# Basis function e described in the notes
 def e(i: int, x: float) -> float:
     assert 0 <= i and i <= N
     if i == 0:
@@ -32,7 +32,7 @@ def e(i: int, x: float) -> float:
         return (x-X[i+1])/(X[i]-X[i+1])
     return 0.0
 
-# Derivative of base function e
+# Derivative of basis function e
 def eprime(i: int, x: float) -> float:
     assert 0 <= i and i <= N
     if i == 0:
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     NUM_INTEGRAL_SAMPLES = 1000
 
     N = int(argv[1])
-    assert N >= 0
+    assert N > 0
     DOMAIN = [0.0, 3.0]
     RHO = 1
     EPSILON_R = [(10, (0.0, 1.0)), (5, (1.0, 2.0)), (1, (2.0, 3.0))]
@@ -79,6 +79,7 @@ if __name__ == '__main__':
     B2 = np.zeros(N)
     L = np.zeros(N)
 
+    # For the given basis the integral is equal to 0 if |i-j| >= 2
     INTEGRAL = [[integral(lambda x: eprime(i, x)*eprime(j, x), *DOMAIN) if abs(i-j) < 2 else 0.0 for j in range(i+1)] for i in range(N+1)]
 
     # Computing B(e_i, e_j)
@@ -103,7 +104,7 @@ if __name__ == '__main__':
     # Computing the inverse matrix of B
     B_inv = np.linalg.inv(B)
     # Computing W
-    W = B_inv @ L
+    W = B_inv @ (L-B2)
     # Assuming w_n = 2
     W = np.append(W, 2)
 
@@ -112,5 +113,42 @@ if __name__ == '__main__':
     Y_SAMPLES = np.array([phi(x) for x in X_SAMPLES])
 
     fig, ax = plt.subplots()
+    ax.set_title("Integrals computed numerically")
+    ax.plot(X_SAMPLES, Y_SAMPLES)
+    # plt.show()
+
+    # ------------------------------------------------
+    # Precomputed integrals
+    B = np.zeros((N, N))
+    B2 = np.zeros(N)
+    L = np.zeros(N)
+
+    B[0][0] = 1-3/N
+    for i in range(1, N):
+        B[i][i] = -6/N
+    for i in range(N-1):
+        B[i][i+1] = B[i+1][i] = 3/N
+
+    B2[N-1] = 6/N
+
+    L[0] = 5-3*RHO/(2*N*EPSILON_R[0][0])
+    current_segment = 0
+    for j in range(1, N):
+        if EPSILON_R[current_segment][1][1] < X[j]:
+            current_segment += 1
+        L[j] = -3*RHO/(N*EPSILON_R[current_segment][0])
+
+    # Computing the inverse matrix of B
+    B_inv = np.linalg.inv(B)
+    # Computing W
+    W = B_inv @ (L-B2)
+    # Assuming w_n = 2
+    W = np.append(W, 2)
+
+    # Sampling phi
+    Y_SAMPLES = np.array([phi(x) for x in X_SAMPLES])
+
+    fig, ax = plt.subplots()
+    ax.set_title("Precomputed integrals")
     ax.plot(X_SAMPLES, Y_SAMPLES)
     plt.show()
