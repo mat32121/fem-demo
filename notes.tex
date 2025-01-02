@@ -167,16 +167,16 @@
         \end{cases} \nonumber \\
         &=
         \begin{cases}
-            e_0(0)^2 - 1,& i = j = 0 \\
-            e_i(0)^2 - 2,& i = j \neq 0 \\
-            e_i(0)e_j(0) + 1,& |i-j| = 1 \\
+            e_0(0)^2 - \frac{3}{n},& i = j = 0 \\
+            e_i(0)^2 - \frac{6}{n},& i = j \neq 0 \\
+            e_i(0)e_j(0) + \frac{3}{n},& |i-j| = 1 \\
             e_i(0)e_j(0),& |i-j| \geq 2
         \end{cases} \nonumber \\
         &=
         \begin{cases}
-            0,& i = j = 0 \\
-            -2,& i = j \neq 0 \\
-            1,& |i-j| = 1 \\
+            1-\frac{3}{n},& i = j = 0 \\
+            -\frac{6}{n},& i = j \neq 0 \\
+            \frac{3}{n},& |i-j| = 1 \\
             0,& |i-j| \geq 2
         \end{cases} \label{bij_val}
     \end{align}
@@ -189,12 +189,12 @@
         \end{cases} \nonumber \\
         &=
         \begin{cases}
-            2e_n(0)e_{n-1}(0) + 2,& j = n-1 \\
+            2e_n(0)e_{n-1}(0) + \frac{6}{n},& j = n-1 \\
             2e_n(0)e_j(0),& j \neq n-1
         \end{cases} \nonumber \\
         &=
         \begin{cases}
-            2,& j = n-1 \\
+            \frac{6}{n},& j = n-1 \\
             0,& j \neq n-1
         \end{cases} \label{bnj_val}
     \end{align}
@@ -203,8 +203,8 @@
         L(e_j) &= 5e_j(0) - \frac{\rho}{\epsilon_r} \int_{0}^{3} e_j\,dx \nonumber \\
         &=
         \begin{cases}
-            5 - \frac{\rho}{2\epsilon_r},& j = 0 \\
-            -\frac{\rho}{\epsilon_r},& j \neq 0
+            5 - \frac{3\rho}{2n\epsilon_r},& j = 0 \\
+            -\frac{3\rho}{n\epsilon_r},& j \neq 0
         \end{cases} \label{lj_val}
     \end{align}
     Podstawiając wartości (\ref{bij_val}), (\ref{bnj_val}), (\ref{lj_val}) do równania (\ref{matrix_solution}) otrzymujemy:
@@ -220,23 +220,23 @@
         \end{bmatrix}
         =
         \begin{bmatrix}
-            0 &  1 &  0 &  0 &  0 & \cdots &  0 \\
-            1 & -2 &  1 &  0 &  0 & \cdots &  0 \\
-            0 &  1 & -2 &  1 &  0 & \cdots &  0 \\
-            0 &  0 &  1 & -2 &  1 & \cdots &  0 \\
-            0 &  0 &  0 &  1 & -2 & \cdots &  0 \\
+            1-\frac{3}{n} &  \frac{3}{n} &  0 &  0 &  0 & \cdots &  0 \\
+            \frac{3}{n} & -\frac{6}{n} &  \frac{3}{n} &  0 &  0 & \cdots &  0 \\
+            0 &  \frac{3}{n} & -\frac{6}{n} &  \frac{3}{n} &  0 & \cdots &  0 \\
+            0 &  0 &  \frac{3}{n} & -\frac{6}{n} &  \frac{3}{n} & \cdots &  0 \\
+            0 &  0 &  0 &  \frac{3}{n} & -\frac{6}{n} & \cdots &  0 \\
             \vdots & \vdots & \vdots & \vdots & \vdots & \ddots & \vdots \\
-            0 &  0 &  0 &  0 &  0 & \cdots & -2
+            0 &  0 &  0 &  0 &  0 & \cdots & -\frac{6}{n}
         \end{bmatrix}
         ^{-1}
         \begin{bmatrix}
-            5 - \frac{\rho}{2\epsilon_r} \\
-            -\frac{\rho}{\epsilon_r} \\
-            -\frac{\rho}{\epsilon_r} \\
-            -\frac{\rho}{\epsilon_r} \\
+            5 - \frac{3\rho}{2n\epsilon_r} \\
+            -\frac{3\rho}{n\epsilon_r} \\
+            -\frac{3\rho}{n\epsilon_r} \\
+            -\frac{3\rho}{n\epsilon_r} \\
             \vdots \\
-            -\frac{\rho}{\epsilon_r} \\
-            -\frac{\rho}{\epsilon_r}-2
+            -\frac{3\rho}{n\epsilon_r} \\
+            -\frac{3\rho}{n\epsilon_r}-\frac{6}{n}
         \end{bmatrix} \label{matrix_nums}
     \end{equation}
     Przy aproksymacji (\ref{phi_approx}) założyliśmy, że \(w_n = 2\). Stąd możemy już obliczyć wszystkie wartości ciągu \((w_0, w_1, \ldots, w_n)\) i zaproksymować \(\phi\) zgodnie z (\ref{phi_approx}):

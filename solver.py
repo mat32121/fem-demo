@@ -9,7 +9,6 @@ from sys import argv
 # Computes integral of function fun from a to b
 def integral(fun: Callable[[float], float], a: float, b: float) -> float:
     if a == b: return 0.0
-    if a > b: return -integral(fun, b, a, NUM_INTEGRAL_SAMPLES)
 
     sample = np.linspace(a, b, NUM_INTEGRAL_SAMPLES)
     area = 0.0
@@ -95,7 +94,7 @@ if __name__ == '__main__':
 
     # Computing B(2e_n, e_j)
     for j in range(N):
-        B2[j] = 2*e(N, 0.0)*e(j, 0.0) - INTEGRAL[N][j]
+        B2[j] = 2*e(N, 0.0)*e(j, 0.0) - 2*INTEGRAL[N][j]
     
     # Computing L(e_j)
     current_segment = 0
@@ -115,6 +114,12 @@ if __name__ == '__main__':
     # while True:
         # x = float(input("x: "))
         # print(binsearch(x), phi(x))
+
+    # print(B)
+    # print(np.array(INTEGRAL))
+    # print(B2)
+    # print(L)
+    # print([binsearch(i) for i in np.linspace(*DOMAIN, 12)])
 
     # Sampling phi
     X_SAMPLES = np.linspace(*DOMAIN, NUM_PHI_SAMPLES)
