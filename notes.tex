@@ -70,7 +70,7 @@
             0,& \text{w przeciwnym wypadku}
         \end{cases} \label{e_def}
     \end{equation}
-    Aproksymujemy rozwiązanie liniowe kombinacją funkcji bazowych \(e_i = e_i(x)\) z przesunięciem \(w_n = 2e_n\), co wynika z (\ref{dirichlet}):
+    Aproksymujemy rozwiązanie liniowe kombinacją funkcji bazowych \(e_i = e_i(x)\) z przesunięciem \(2e_n\) (zatem zakładamy, że \(w_n = 2\)), co wynika z (\ref{dirichlet}):
     \begin{gather}
         \phi \approx 2e_n + \sum_{i=0}^{n-1} w_i e_i \label{phi_approx}\\
         v \approx \sum_{i=0}^{n-1} v_i e_i \label{v_approx}
@@ -212,6 +212,9 @@
         \begin{bmatrix}
             w_0 \\
             w_1 \\
+            w_2 \\
+            w_3 \\
+            w_4 \\
             \vdots \\
             w_{n-1}
         \end{bmatrix}
@@ -236,7 +239,7 @@
             -\frac{\rho}{\epsilon_r}-2
         \end{bmatrix} \label{matrix_nums}
     \end{equation}
-    Przy aproksymacji (\ref{phi_approx}) założyliśmy, że \(w_n = 2e_n\). Stąd możemy już obliczyć wszystkie wartości ciągu \((w_0, w_1, \ldots, w_n)\) i zaproksymować \(\phi\) zgodnie z (\ref{phi_approx}):
+    Przy aproksymacji (\ref{phi_approx}) założyliśmy, że \(w_n = 2\). Stąd możemy już obliczyć wszystkie wartości ciągu \((w_0, w_1, \ldots, w_n)\) i zaproksymować \(\phi\) zgodnie z (\ref{phi_approx}):
     \begin{equation}
         \phi \approx 2e_n + \sum_{i=0}^{n-1} w_i e_i = \sum_{i=0}^{n} w_i e_i
     \end{equation}
