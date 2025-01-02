@@ -74,22 +74,19 @@ if __name__ == '__main__':
     RHO = 1
     EPSILON_R = [(10, (0.0, 1.0)), (5, (1.0, 2.0)), (1, (2.0, 3.0))]
 
-    # X = [(DOMAIN[1]-DOMAIN[0])*i/N+DOMAIN[0] for i in range(N+1)]
     X = np.linspace(*DOMAIN, N+1)
-    # B = [[0.0 for j in range(N)] for i in range(N)]
     B = np.zeros((N, N))
     B2 = np.zeros(N)
-    # L = [0.0 for i in range(N)]
     L = np.zeros(N)
 
-    INTEGRAL = [[integral(lambda x: eprime(i, x)*eprime(j, x), *DOMAIN) for j in range(N+1)] for i in range(N+1)]
+    INTEGRAL = [[integral(lambda x: eprime(i, x)*eprime(j, x), *DOMAIN) if abs(i-j) < 2 else 0.0 for j in range(i+1)] for i in range(N+1)]
 
     # Computing B(e_i, e_j)
     B[0][0] = e(0, 0.0)**2 - INTEGRAL[0][0]
     for i in range(N):
         B[i][i] = e(i, 0.0)**2 - INTEGRAL[i][i]
-    for i in range(N):
-        for j in range(i+1, N):
+    for i in range(1, N):
+        for j in range(i):
             B[i][j] = B[j][i] = e(i, 0.0)*e(j, 0.0) - INTEGRAL[i][j]
 
     # Computing B(2e_n, e_j)
@@ -109,17 +106,6 @@ if __name__ == '__main__':
     W = B_inv @ L
     # Assuming w_n = 2
     W = np.append(W, 2)
-
-    # print(X)
-    # while True:
-        # x = float(input("x: "))
-        # print(binsearch(x), phi(x))
-
-    # print(B)
-    # print(np.array(INTEGRAL))
-    # print(B2)
-    # print(L)
-    # print([binsearch(i) for i in np.linspace(*DOMAIN, 12)])
 
     # Sampling phi
     X_SAMPLES = np.linspace(*DOMAIN, NUM_PHI_SAMPLES)
