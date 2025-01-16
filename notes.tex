@@ -61,7 +61,7 @@
 
     \section{Zastosowanie metody Galerkina}
     Dzielimy dziedzinę na n obszarów.
-    W związku z tym przyjmuję ciąg funkcji bazowych \((e_0, e_1, ..., e_n)\) zdefiniowanych następująco:
+    W związku z tym przyjmuję ciąg funkcji bazowych \((e_0, e_1, ..., e_n)\) i ich pochodnych zdefiniowanych następująco:
     \begin{equation}
         e_i(x) =
         \begin{cases}
@@ -163,7 +163,7 @@
     }
 
     \section{Obliczanie wartości układu równań}
-    Obliczając całki iloczynów funkcji bazowych korzystamy z faktu, że \(e_i e_j \equiv 0\) dla \(|i-j| \geq 2\), ponieważ dla każdego \(x\) co najmniej jeden z czynników jest równy 0, co wynika z definicji (\ref{e_def}).\\
+    Obliczając całki iloczynów funkcji bazowych oraz iloczynów ich pochodnych korzystamy z faktu, że \(e_i e_j \equiv e_i' e_j' \equiv 0\) dla \(|i-j| \geq 2\), ponieważ dla każdego \(x\) co najmniej jeden z czynników jest równy 0, co wynika z definicji (\ref{e_def}), (\ref{eprime_def}).\\
     Wyznaczamy wartości \(B(e_i, e_j)\) korzystając z równania (\ref{b_def}):
     \begin{align}
         B(e_i, e_j) &=
