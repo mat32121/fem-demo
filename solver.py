@@ -37,14 +37,14 @@ def eprime(i: int, x: float) -> float:
     assert 0 <= i and i <= N
     if i == 0:
         if X[0] < x and x < X[1]:
-            return -1.0
+            return -1.0/(X[1]-X[0])
     elif i == N:
         if X[N-1] < x and x < X[N]:
-            return 1.0
+            return 1.0/(X[1]-X[0])
     elif X[i-1] < x and x < X[i]:
-        return 1.0
+        return 1.0/(X[1]-X[0])
     elif X[i] < x and x < X[i+1]:
-        return -1.0
+        return -1.0/(X[1]-X[0])
     return 0.0
 
 def binsearch(x: float) -> int:
@@ -123,13 +123,13 @@ if __name__ == '__main__':
     B2 = np.zeros(N)
     L = np.zeros(N)
 
-    B[0][0] = 1-3/N
+    B[0][0] = 1-N/3
     for i in range(1, N):
-        B[i][i] = -6/N
+        B[i][i] = -2*N/3
     for i in range(N-1):
-        B[i][i+1] = B[i+1][i] = 3/N
+        B[i][i+1] = B[i+1][i] = N/3
 
-    B2[N-1] = 6/N
+    B2[N-1] = 2*N/3
 
     L[0] = 5-3*RHO/(2*N*EPSILON_R[0][0])
     current_segment = 0
