@@ -154,7 +154,7 @@
     \end{equation}
     }
 
-    \section{Obliczanie aproksymacji komputerowo}
+    \section{Obliczanie wartości układu równań}
     Obliczając całki iloczynów funkcji bazowych korzystamy z faktu, że \(e_i e_j \equiv 0\) dla \(|i-j| \geq 2\), ponieważ dla każdego \(x\) co najmniej jeden z czynników jest równy 0, co wynika z definicji (\ref{e_def}).\\
     Wyznaczamy wartości \(B(e_i, e_j)\) korzystając z równania (\ref{b_def}):
     \begin{align}
@@ -248,7 +248,7 @@
     W ramach aproksymacji zadanego równania całki funkcji bazowych liczone są numerycznie, w związku z czym wartości obliczone w poprzedniej sekcji nie są wymagane.
     Program jest napisany w języku \textit{Python 3.12.3} i wykorzystuje biblioteki:
     \begin{itemize}
-        \item \textit{matplotlib 3.6.3} - do wizualizacji danych,
+        \item \textit{matplotlib 3.10.0} - do wizualizacji danych,
         \item \textit{numpy 1.26.4} - do rachunku macierzowego.
     \end{itemize}
     Wartość \(n\) przekazywana jest przez użytkownika jako parametr uruchomieniowy aplikacji, tj. wykonywany jest kod \lstinline{N = int(sys.argv[1])}.

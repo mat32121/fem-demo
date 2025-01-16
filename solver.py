@@ -28,7 +28,7 @@ def e(i: int, x: float) -> float:
             return (x-X[N-1])/(X[N]-X[N-1])
     elif X[i-1] < x and x <= X[i]:
         return (x-X[i-1])/(X[i]-X[i-1])
-    elif X[i] <= x and x < X[i+1]:
+    elif X[i] < x and x < X[i+1]:
         return (x-X[i+1])/(X[i]-X[i+1])
     return 0.0
 
