@@ -101,10 +101,8 @@ if __name__ == '__main__':
             current_segment += 1
         L[j] = 5*e(j, 0.0) - RHO/EPSILON_R[current_segment][0]*integral(lambda x: e(j, x), *DOMAIN)
 
-    # Computing the inverse matrix of B
-    B_inv = np.linalg.inv(B)
     # Computing W
-    W = B_inv @ (L-B2)
+    W = np.linalg.solve(B, L-B2)
     # Assuming w_n = 2
     W = np.append(W, 2)
 
@@ -138,10 +136,8 @@ if __name__ == '__main__':
             current_segment += 1
         L[j] = -3*RHO/(N*EPSILON_R[current_segment][0])
 
-    # Computing the inverse matrix of B
-    B_inv = np.linalg.inv(B)
     # Computing W
-    W = B_inv @ (L-B2)
+    W = np.linalg.solve(B, L-B2)
     # Assuming w_n = 2
     W = np.append(W, 2)
 
